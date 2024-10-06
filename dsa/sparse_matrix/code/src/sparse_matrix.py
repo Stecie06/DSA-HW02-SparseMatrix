@@ -11,15 +11,13 @@ class SparseMatrix:
         try:
             with open(file_path, 'r') as f:
                 lines = f.readlines()
-                
-                # Read number of rows and columns
+
                 self.num_rows = int(lines[0].split('=')[1].strip())
                 self.num_cols = int(lines[1].split('=')[1].strip())
-                
-                # Read the sparse matrix entries
+
                 for line in lines[2:]:
                     line = line.strip()
-                    if line:  # Ignore empty lines
+                    if line:  
                         if not self.is_valid_entry(line):
                             raise ValueError("Input file has wrong format")
                         
@@ -35,7 +33,6 @@ class SparseMatrix:
         return line.startswith('(') and line.endswith(')')
 
     def parse_entry(self, line):
-        # Strip parentheses and split by commas
         line = line[1:-1].strip()
         parts = line.split(',')
         return int(parts[0].strip()), int(parts[1].strip()), int(parts[2].strip())
@@ -54,8 +51,7 @@ class SparseMatrix:
             raise ValueError("Matrix dimensions do not match for addition")
         
         result = SparseMatrix(num_rows=self.num_rows, num_cols=self.num_cols)
-        
-        # Add elements from both matrices
+
         for (row, col), value in self.data.items():
             result.set_element(row, col, value + other.get_element(row, col))
         
@@ -66,8 +62,7 @@ class SparseMatrix:
             raise ValueError("Matrix dimensions do not match for subtraction")
         
         result = SparseMatrix(num_rows=self.num_rows, num_cols=self.num_cols)
-        
-        # Subtract elements from the other matrix
+
         for (row, col), value in self.data.items():
             result.set_element(row, col, value - other.get_element(row, col))
         
@@ -78,8 +73,7 @@ class SparseMatrix:
             raise ValueError("Matrix dimensions do not allow multiplication")
         
         result = SparseMatrix(num_rows=self.num_rows, num_cols=other.num_cols)
-        
-        # Perform multiplication
+
         for (row, col), value in self.data.items():
             for k in range(other.num_cols):
                 result_value = value * other.get_element(col, k)
@@ -97,11 +91,11 @@ class SparseMatrix:
         return '\n'.join(output)
 
 def main():
-    matrix1_path = input("Enter the path for the first matrix file: ")
-    matrix2_path = input("Enter the path for the second matrix file: ")
+    matrix1_direction = input("Enter the path for the first matrix: ")
+    matrix2_direction = input("Enter the path for the second matrix: ")
 
-    matrix1 = SparseMatrix(matrix_file_path=matrix1_path)
-    matrix2 = SparseMatrix(matrix_file_path=matrix2_path)
+    matrix1 = SparseMatrix(matrix_file_path=matrix1_direction)
+    matrix2 = SparseMatrix(matrix_file_path=matrix2_direction)
 
     operation = input("Select operation (add/subtract/multiply): ").strip().lower()
 
